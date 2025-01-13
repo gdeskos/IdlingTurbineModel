@@ -1,0 +1,16 @@
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - pip
+  - numpy
+  - pandas
+  - matplotlib
+  - ninja
+  - yaml
+  - cmake
+  - make
+  - ipykernel
+  # - pip:
+  #   - "--editable=git+https://github.com/mayankchetan/openfast/tree/of_io_tightCoupling/openfast_io"
