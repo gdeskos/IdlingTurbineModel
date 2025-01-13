@@ -13,7 +13,7 @@ import os
 from typing import List, Tuple
 import numpy as np
 import math
-print(f"{__file__} taken with love from WEIS @ https://github.com/WISDEM/WEIS")
+print(f"{os.path.basename(__file__)} taken with love from WEIS @ https://github.com/WISDEM/WEIS")
 
 
 IntfStrLen = 1025    # FAST_Library global

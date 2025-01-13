@@ -13,12 +13,12 @@ from openfast_io.FAST_reader import InputReader_OpenFAST
 from openfast_io.FAST_writer import InputWriter_OpenFAST
 from util.FAST_wrapper import FAST_wrapper, Turbsim_wrapper, IEC_CoherentGusts
 # from calculated_channels import calculate_channels
-# from pCrunch.io import OpenFASTOutput, OpenFASTBinary, OpenFASTAscii
+from openfast_io.FAST_output_reader import FASTOutputFile
 # from pCrunch import LoadsAnalysis, FatigueParams
 # from weis.aeroelasticse.openfast_library import FastLibAPI
 
 import numpy as np
-print(f"{__file__} taken with love from WEIS @ https://github.com/WISDEM/WEIS")
+print(f"{os.path.basename(__file__)} taken with love from WEIS @ https://github.com/WISDEM/WEIS")
 
 # Realpath will resolve symlinks
 # of_path = os.path.realpath( shutil.which('openfast') )
@@ -186,53 +186,60 @@ class runFAST_pywrapper(object):
                 failed = False
                 print('OpenFAST not executed: Output file "%s" already exists. To overwrite this output file, set "overwrite_outfiles = True".'%FAST_Output)
 
-            if not failed:
-                if os.path.exists(FAST_Output):
-                    output_init = OpenFASTBinary(FAST_Output, magnitude_channels=self.magnitude_channels)
-                elif os.path.exists(FAST_Output_txt):
-                    output_init = OpenFASTAscii(FAST_Output_txt, magnitude_channels=self.magnitude_channels)
+        #     if not failed:
+        #         if os.path.exists(FAST_Output):
+        #             output_init = OpenFASTBinary(FAST_Output, magnitude_channels=self.magnitude_channels)
+        #         elif os.path.exists(FAST_Output_txt):
+        #             output_init = OpenFASTAscii(FAST_Output_txt, magnitude_channels=self.magnitude_channels)
                     
-                output_init.read()
+        #         output_init.read()
 
-                # Make output dict
-                output_dict = {}
-                for i, channel in enumerate(output_init.channels):
-                    output_dict[channel] = output_init.df[channel].to_numpy()
+        #         # Make output dict
+        #         output_dict = {}
+        #         for i, channel in enumerate(output_init.channels):
+        #             output_dict[channel] = output_init.df[channel].to_numpy()
 
-                # Add channel to indicate failed run
-                output_dict['openfast_failed'] = np.zeros(len(output_dict[channel]))
+        #         # Add channel to indicate failed run
+        #         output_dict['openfast_failed'] = np.zeros(len(output_dict[channel]))
 
-                # Calculated channels
-                calculate_channels(output_dict, self.fst_vt)
+        #         # Calculated channels
+        #         calculate_channels(output_dict, self.fst_vt)
 
-                # Re-make output
-                output = OpenFASTOutput.from_dict(output_dict, self.FAST_namingOut)
+        #         # Re-make output
+        #         output = OpenFASTOutput.from_dict(output_dict, self.FAST_namingOut)
             
-            else: # fill with -9999s
-                output_dict = {}
-                output_dict['Time'] = np.arange(self.fst_vt['Fst']['TStart'],self.fst_vt['Fst']['TMax'],self.fst_vt['Fst']['DT'])
-                for module in self.fst_vt['outlist']:
-                    for channel in self.fst_vt['outlist'][module]:
-                        if self.fst_vt['outlist'][module][channel]:
-                            output_dict[channel] = np.full(len(output_dict['Time']),fill_value=self.fail_value, dtype=np.uint8) 
+        #     else: # fill with -9999s
+        #         output_dict = {}
+        #         output_dict['Time'] = np.arange(self.fst_vt['Fst']['TStart'],self.fst_vt['Fst']['TMax'],self.fst_vt['Fst']['DT'])
+        #         for module in self.fst_vt['outlist']:
+        #             for channel in self.fst_vt['outlist'][module]:
+        #                 if self.fst_vt['outlist'][module][channel]:
+        #                     output_dict[channel] = np.full(len(output_dict['Time']),fill_value=self.fail_value, dtype=np.float32) 
 
-                # Add channel to indicate failed run
-                output_dict['openfast_failed'] = np.ones(len(output_dict['Time']), dtype=np.uint8)
+        #         # Add channel to indicate failed run
+        #         output_dict['openfast_failed'] = np.ones(len(output_dict['Time']), dtype=np.float32)
 
-                output = OpenFASTOutput.from_dict(output_dict, self.FAST_namingOut, magnitude_channels=self.magnitude_channels)
+        #         # output = OpenFASTOutput.from_dict(output_dict, self.FAST_namingOut, magnitude_channels=self.magnitude_channels)
+        #         output = []
 
-            # clear dictionary if we're not keeping time
-            if not self.keep_time: output_dict = None
+        #     # clear dictionary if we're not keeping time
+        #     if not self.keep_time: output_dict = None
 
 
 
-        # Trim Data
-        if self.fst_vt['Fst']['TStart'] > 0.0:
-            output.trim_data(tmin=self.fst_vt['Fst']['TStart'], tmax=self.fst_vt['Fst']['TMax'])
-        case_name, sum_stats, extremes, dels, damage = self.la._process_output(output,
-                                                                               return_damage=True,
-                                                                               goodman_correction=self.goodman)
+        # # Trim Data
+        # # if self.fst_vt['Fst']['TStart'] > 0.0:
+        # #     output.trim_data(tmin=self.fst_vt['Fst']['TStart'], tmax=self.fst_vt['Fst']['TMax'])
+        # # case_name, sum_stats, extremes, dels, damage = self.la._process_output(output,
+        # #                                                                        return_damage=True,
+        # #                                                                        goodman_correction=self.goodman)
 
+        case_name = None
+        sum_stats = None
+        extremes = None
+        dels = None
+        damage = None
+        output_dict = None
         return case_name, sum_stats, extremes, dels, damage, output_dict
 
 
@@ -333,8 +340,11 @@ class runFAST_pywrapper_batch(object):
             dam[_name] = _dam
             ct.append(_ct)
             
-        summary_stats, extreme_table, DELs, Damage = self.la.post_process(ss, et, dl, dam)
-
+        # summary_stats, extreme_table, DELs, Damage = self.la.post_process(ss, et, dl, dam)
+        summary_stats = None
+        extreme_table = None
+        DELs = None
+        Damage = None
         return summary_stats, extreme_table, DELs, Damage, ct
 
     def run_multi(self, cores=None):

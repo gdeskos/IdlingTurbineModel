@@ -3,7 +3,7 @@ import subprocess
 import platform
 import time
 import numpy as np
-print(f"{__file__} taken with love from WEIS @ https://github.com/WISDEM/WEIS")
+print(f"{os.path.basename(__file__)} taken with love from WEIS @ https://github.com/WISDEM/WEIS")
 
 class FAST_wrapper(object):
 
@@ -34,7 +34,8 @@ class FAST_wrapper(object):
             pass
         exec_str = []
         exec_str.append(self.FAST_exe)
-        exec_str.append(self.FAST_InputFile)
+        # exec_str.append(self.FAST_InputFile)
+        exec_str.append('-h') # overiding the OpenFAST execution to continue writing the input files
 
         olddir = os.getcwd()
         os.chdir(self.FAST_directory)
