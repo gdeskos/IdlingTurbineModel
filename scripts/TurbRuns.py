@@ -1,5 +1,5 @@
-from weis.aeroelasticse.runFAST_pywrapper import runFAST_pywrapper_batch
-from weis.aeroelasticse.CaseGen_General import CaseGen_General
+from runFAST_pywrapper import runFAST_pywrapper_batch
+from CaseGen_General import CaseGen_General
 import numpy as np
 import os
 import pickle
@@ -22,8 +22,6 @@ except KeyError:
 parser = argparse.ArgumentParser()
 
 # # Adding optional argument
-# # parser.add_argument("--startW", type = float, help = "Start Wind Speed")
-# # parser.add_argument("--endW", type = float, help = "End Wind Speed")
 parser.add_argument("--numCores", type = int, help = "Number of cores to use", default=1)
 
 # # Read arguments from command line
@@ -34,9 +32,8 @@ if __name__ == '__main__':
     # Paths calling the standard modules of WEIS
     fastBatch = runFAST_pywrapper_batch()
     run_dir = os.path.dirname( os.path.realpath(__file__) ) + os.sep
-    fastBatch.FAST_directory = os.path.join(run_dir, '../OpenFAST','IEA-15-240-RWT-LandBased_of500')   # Path to fst directory files
+    fastBatch.FAST_directory = os.path.join(run_dir, '../openfast_model')   # Path to fst directory files
     fastBatch.FAST_InputFile    = 'IEA-15-240-RWT-LandBased.fst'   # FAST input file (ext=.fst) # RAAW_unbalanced.fst for b1 + 3% mass increase
-    # fastBatch.FAST_runDirectory = os.path.join(run_dir , '..', '..', 'outputs', 'tower-s2s-9P', '01_steady_BD_noBlUb_PF_sweep_7_14_G1022_17AUG')
 
 
     fastBatch.FAST_runDirectory = os.path.join('/scratch/mchetan/idlingRotor/paper/tight-coupling', # 'steady-af-steady', 'steady-af-unsteady', 
