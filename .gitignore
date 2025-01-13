@@ -1,0 +1,5 @@
+# OpenFAST related files
+
+*.out
+*.outb
+*.sum
