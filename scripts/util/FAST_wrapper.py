@@ -3,6 +3,7 @@ import subprocess
 import platform
 import time
 import numpy as np
+print(f"{__file__} taken with love from WEIS @ https://github.com/WISDEM/WEIS")
 
 class FAST_wrapper(object):
 

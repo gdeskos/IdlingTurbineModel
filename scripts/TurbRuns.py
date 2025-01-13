@@ -1,5 +1,6 @@
-from runFAST_pywrapper import runFAST_pywrapper_batch
-from CaseGen_General import CaseGen_General
+from util.runFAST_pywrapper import runFAST_pywrapper_batch
+from util.CaseGen_General import CaseGen_General
+from openfast_io.turbsim_util import TurbsimReader, TurbsimWriter
 import numpy as np
 import os
 import pickle
@@ -27,6 +28,11 @@ parser.add_argument("--numCores", type = int, help = "Number of cores to use", d
 # # Read arguments from command line
 args = parser.parse_args()
 
+
+
+### Simulation settings
+
+
 if __name__ == '__main__':
 
     # Paths calling the standard modules of WEIS
@@ -36,7 +42,7 @@ if __name__ == '__main__':
     fastBatch.FAST_InputFile    = 'IEA-15-240-RWT-LandBased.fst'   # FAST input file (ext=.fst) # RAAW_unbalanced.fst for b1 + 3% mass increase
 
 
-    fastBatch.FAST_runDirectory = os.path.join('/scratch/mchetan/idlingRotor/paper/tight-coupling', # 'steady-af-steady', 'steady-af-unsteady', 
+    fastBatch.FAST_runDirectory = os.path.join(f'/scratch/{os.environ['USER']}/idlingRotor/',
                                                 'of500' ,'steady')
 
 
@@ -70,21 +76,21 @@ if __name__ == '__main__':
 
     case_inputs[("Fst","SttsTime")]         = {'vals':[case_inputs[("Fst","DT_Out")]['vals'][0]*10], 'group':0}
 
-    # case_inputs[("Fst","AeroFile")]         = {'vals':['IEA-15-240-RWT_Land-Based_AeroDyn15_no3D.dat'], 'group':0} # Pointing to the polars without 3D corrections
+    # case_inputs[("Fst","AeroFile")]         = {'vals':['IEA-15-240-RWT_Land-Based_AeroDyn_no3D.dat'], 'group':0} # Pointing to the polars without 3D corrections
 
-    ##### Settings for AeroDyn15
+    ##### Settings for AeroDyn
 
-    case_inputs[("AeroDyn15","Wake_Mod")]  = {'vals':[0], 'group':0}     # Turning off BEM/DBEM
-    case_inputs[("AeroDyn15","AFAeroMod")]  = {'vals':[0], 'group':0}   # Running AF aero seperatly #######################################################################
+    case_inputs[("AeroDyn","Wake_Mod")]  = {'vals':[0], 'group':0}     # Turning off BEM/DBEM
+    case_inputs[("AeroDyn","AFAeroMod")]  = {'vals':[0], 'group':0}   # Running AF aero seperatly #######################################################################
     
     # If unsteady airfoil aerodynamics is used, then the following settings are needed
-    if case_inputs[("AeroDyn15","AFAeroMod")]['vals'][0] == 2:
-        case_inputs[("AeroDyn15","UA_Mod")]      = {'vals':[4], 'group':4} #, 4], 'group':4}   # GE: 1-state B-L model
+    if case_inputs[("AeroDyn","AFAeroMod")]['vals'][0] == 2:
+        case_inputs[("AeroDyn","UA_Mod")]      = {'vals':[4], 'group':4} #, 4], 'group':4}   # GE: 1-state B-L model
     else:
-        case_inputs[("AeroDyn15","UA_Mod")]      = {'vals':[0], 'group':0}
+        case_inputs[("AeroDyn","UA_Mod")]      = {'vals':[0], 'group':0}
 
-    case_inputs[("AeroDyn15","TwrPotent")]  = {'vals':[0], 'group':0}   # Turning off tower potential flow
-    case_inputs[("AeroDyn15","TwrShadow")]  = {'vals':[0], 'group':0}   # Turning off tower shadow
+    case_inputs[("AeroDyn","TwrPotent")]  = {'vals':[0], 'group':0}   # Turning off tower potential flow
+    case_inputs[("AeroDyn","TwrShadow")]  = {'vals':[0], 'group':0}   # Turning off tower shadow
 
 
     ##### Settings for Structural

@@ -3,3 +3,13 @@
 *.out
 *.outb
 *.sum
+
+# turbsim
+*.bts
+*.png
+turb_sim/TurbSimGenFiles
+
+# python related files
+*.pyc
+*.pyo
+__pycache__

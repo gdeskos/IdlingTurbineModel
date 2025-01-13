@@ -12,6 +12,10 @@
         conda install git
 
         conda env create --name weis-env -f environment.yml
+
+    OR, use the below command to create a path specific conda env (Prefered)
+
+        conda env create -p /path/to/new/env -f environment.yml
         
 
 3. OpenFAST: https://github.com/mayankchetan/openfast/tree/of_io_tightCoupling

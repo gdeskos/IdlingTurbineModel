@@ -2,6 +2,8 @@ import os, itertools
 import numpy as np
 from openfast_io.FileTools import save_yaml
 
+print(f"{__file__} taken with love from WEIS @ https://github.com/WISDEM/WEIS")
+
 def save_case_matrix(matrix_out, change_vars, dir_matrix, filename_ext=''):
     # save matrix file
     if type(change_vars[0]) is tuple:

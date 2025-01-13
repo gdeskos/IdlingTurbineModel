@@ -11,13 +11,14 @@ import multiprocessing as mp
 
 from openfast_io.FAST_reader import InputReader_OpenFAST
 from openfast_io.FAST_writer import InputWriter_OpenFAST
-from FAST_wrapper import FAST_wrapper, Turbsim_wrapper, IEC_CoherentGusts
+from util.FAST_wrapper import FAST_wrapper, Turbsim_wrapper, IEC_CoherentGusts
 # from calculated_channels import calculate_channels
 # from pCrunch.io import OpenFASTOutput, OpenFASTBinary, OpenFASTAscii
 # from pCrunch import LoadsAnalysis, FatigueParams
 # from weis.aeroelasticse.openfast_library import FastLibAPI
 
 import numpy as np
+print(f"{__file__} taken with love from WEIS @ https://github.com/WISDEM/WEIS")
 
 # Realpath will resolve symlinks
 # of_path = os.path.realpath( shutil.which('openfast') )
@@ -49,65 +50,6 @@ for libname in ['libopenfastlib', 'openfastlib']:
         break
 
     
-magnitude_channels_default = {
-    'LSShftF': ["RotThrust", "LSShftFys", "LSShftFzs"], 
-    'LSShftM': ["RotTorq", "LSSTipMys", "LSSTipMzs"],
-    'RootMc1': ["RootMxc1", "RootMyc1", "RootMzc1"],
-    'RootMc2': ["RootMxc2", "RootMyc2", "RootMzc2"],
-    'RootMc3': ["RootMxc3", "RootMyc3", "RootMzc3"],
-    'TipDc1': ['TipDxc1', 'TipDyc1', 'TipDzc1'],
-    'TipDc2': ['TipDxc2', 'TipDyc2', 'TipDzc2'],
-    'TipDc3': ['TipDxc3', 'TipDyc3', 'TipDzc3'],
-    'TwrBsM': ['TwrBsMxt', 'TwrBsMyt', 'TwrBsMzt'],
-}
-
-fatigue_channels_default = {
-    'RootMc1': FatigueParams(slope=10),
-    'RootMc2': FatigueParams(slope=10),
-    'RootMc3': FatigueParams(slope=10),
-    'RootMyb1': FatigueParams(slope=10),
-    'RootMyb2': FatigueParams(slope=10),
-    'RootMyb3': FatigueParams(slope=10),
-    'TwrBsM': FatigueParams(slope=4),
-    'LSShftM': FatigueParams(slope=4),
-}
-
-# channel_extremes_default = [
-#     'RotSpeed',
-#     'BldPitch1','BldPitch2','BldPitch3',
-#     "RotThrust","LSShftFys","LSShftFzs","RotTorq","LSSTipMys","LSSTipMzs","LSShftF","LSShftM",
-#     'Azimuth',
-#     'TipDxc1', 'TipDxc2', 'TipDxc3',
-#     "RootMxc1", "RootMyc1","RootMzc1",
-#     "RootMxc2", "RootMyc2","RootMzc2",
-#     "RootMxc3", "RootMyc3","RootMzc3",
-#     "RootFzb1", "RootFzb2", "RootFzb3",
-#     "RootMxb1", "RootMxb2", "RootMxb3",
-#     "RootMyb1", "RootMyb2", "RootMyb3",
-#     "Spn1FLzb1", "Spn2FLzb1", "Spn3FLzb1", "Spn4FLzb1", "Spn5FLzb1", "Spn6FLzb1", "Spn7FLzb1", "Spn8FLzb1", "Spn9FLzb1",
-#     "Spn1MLxb1", "Spn2MLxb1", "Spn3MLxb1", "Spn4MLxb1", "Spn5MLxb1", "Spn6MLxb1", "Spn7MLxb1", "Spn8MLxb1", "Spn9MLxb1",
-#     "Spn1MLyb1", "Spn2MLyb1", "Spn3MLyb1", "Spn4MLyb1", "Spn5MLyb1", "Spn6MLyb1", "Spn7MLyb1", "Spn8MLyb1", "Spn9MLyb1",
-#     "Spn1FLzb2", "Spn2FLzb2", "Spn3FLzb2", "Spn4FLzb2", "Spn5FLzb2", "Spn6FLzb2", "Spn7FLzb2", "Spn8FLzb2", "Spn9FLzb2",
-#     "Spn1MLxb2", "Spn2MLxb2", "Spn3MLxb2", "Spn4MLxb2", "Spn5MLxb2", "Spn6MLxb2", "Spn7MLxb2", "Spn8MLxb2", "Spn9MLxb2",
-#     "Spn1MLyb2", "Spn2MLyb2", "Spn3MLyb2", "Spn4MLyb2", "Spn5MLyb2", "Spn6MLyb2", "Spn7MLyb2", "Spn8MLyb2", "Spn9MLyb2",
-#     "Spn1FLzb3", "Spn2FLzb3", "Spn3FLzb3", "Spn4FLzb3", "Spn5FLzb3", "Spn6FLzb3", "Spn7FLzb3", "Spn8FLzb3", "Spn9FLzb3",
-#     "Spn1MLxb3", "Spn2MLxb3", "Spn3MLxb3", "Spn4MLxb3", "Spn5MLxb3", "Spn6MLxb3", "Spn7MLxb3", "Spn8MLxb3", "Spn9MLxb3",
-#     "Spn1MLyb3", "Spn2MLyb3", "Spn3MLyb3", "Spn4MLyb3", "Spn5MLyb3", "Spn6MLyb3", "Spn7MLyb3", "Spn8MLyb3", "Spn9MLyb3",
-#     "TwrBsFxt",  "TwrBsFyt", "TwrBsFzt", "TwrBsMxt",  "TwrBsMyt", "TwrBsMzt",
-#     "YawBrFxp", "YawBrFyp", "YawBrFzp", "YawBrMxp", "YawBrMyp", "YawBrMzp",
-#     "TwHt1FLxt", "TwHt2FLxt", "TwHt3FLxt", "TwHt4FLxt", "TwHt5FLxt", "TwHt6FLxt", "TwHt7FLxt", "TwHt8FLxt", "TwHt9FLxt",
-#     "TwHt1FLyt", "TwHt2FLyt", "TwHt3FLyt", "TwHt4FLyt", "TwHt5FLyt", "TwHt6FLyt", "TwHt7FLyt", "TwHt8FLyt", "TwHt9FLyt",
-#     "TwHt1FLzt", "TwHt2FLzt", "TwHt3FLzt", "TwHt4FLzt", "TwHt5FLzt", "TwHt6FLzt", "TwHt7FLzt", "TwHt8FLzt", "TwHt9FLzt",
-#     "TwHt1MLxt", "TwHt2MLxt", "TwHt3MLxt", "TwHt4MLxt", "TwHt5MLxt", "TwHt6MLxt", "TwHt7MLxt", "TwHt8MLxt", "TwHt9MLxt",
-#     "TwHt1MLyt", "TwHt2MLyt", "TwHt3MLyt", "TwHt4MLyt", "TwHt5MLyt", "TwHt6MLyt", "TwHt7MLyt", "TwHt8MLyt", "TwHt9MLyt",
-#     "TwHt1MLzt", "TwHt2MLzt", "TwHt3MLzt", "TwHt4MLzt", "TwHt5MLzt", "TwHt6MLzt", "TwHt7MLzt", "TwHt8MLzt", "TwHt9MLzt",
-#     "M1N1FMxe", "M4N1FMxe", "M6N1FMxe", "M8N1FMxe", "M10N1FMxe", "M13N1FMxe", "M15N1FMxe", "M17N1FMxe", "M18N2FMxe",
-#     "M1N1FMye", "M4N1FMye", "M6N1FMye", "M8N1FMye", "M10N1FMye", "M13N1FMye", "M15N1FMye", "M17N1FMye", "M18N2FMye",
-#     "M1N1FMze", "M4N1FMze", "M6N1FMze", "M8N1FMze", "M10N1FMze", "M13N1FMze", "M15N1FMze", "M17N1FMze", "M18N2FMze",
-#     "M1N1MMxe", "M4N1MMxe", "M6N1MMxe", "M8N1MMxe", "M10N1MMxe", "M13N1MMxe", "M15N1MMxe", "M17N1MMxe", "M18N2MMxe",
-#     "M1N1MMye", "M4N1MMye", "M6N1MMye", "M8N1MMye", "M10N1MMye", "M13N1MMye", "M15N1MMye", "M17N1MMye", "M18N2MMye",
-#     "M1N1MMze", "M4N1MMze", "M6N1MMze", "M8N1MMze", "M10N1MMze", "M13N1MMze", "M15N1MMze", "M17N1MMze", "M18N2MMze",
-#     ]
 
 
 class runFAST_pywrapper(object):
@@ -128,8 +70,8 @@ class runFAST_pywrapper(object):
         self.keep_time          = False
         self.use_exe            = False  # use openfast executable instead of library, helpful for debugging sometimes
         self.goodman            = False
-        self.magnitude_channels = magnitude_channels_default
-        self.fatigue_channels   = fatigue_channels_default
+        self.magnitude_channels = []
+        self.fatigue_channels   = []
         self.la                 = None # Will be initialized on first run through
         self.allow_fails        = False
         self.fail_value         = 9999
@@ -186,7 +128,7 @@ class runFAST_pywrapper(object):
             writer.write_yaml()
 
         # Make sure pCrunch is ready
-        self.init_crunch()
+        # self.init_crunch()
             
         if not self.use_exe: # Use library
 
@@ -317,8 +259,8 @@ class runFAST_pywrapper_batch(object):
         self.keep_time          = False
 
         self.goodman            = False
-        self.magnitude_channels = magnitude_channels_default
-        self.fatigue_channels   = fatigue_channels_default
+        self.magnitude_channels = None
+        self.fatigue_channels   = None
         self.la                 = None
         self.use_exe            = False
         self.allow_fails        = False
@@ -374,7 +316,7 @@ class runFAST_pywrapper_batch(object):
         if not os.path.exists(self.FAST_runDirectory):
             os.makedirs(self.FAST_runDirectory)
 
-        self.init_crunch()
+        # self.init_crunch()
             
         case_data_all = self.create_case_data()
             

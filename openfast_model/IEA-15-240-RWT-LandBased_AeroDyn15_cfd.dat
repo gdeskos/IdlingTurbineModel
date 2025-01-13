@@ -18,10 +18,10 @@ AeroAcousticsInput.dat AA_InputFile - AeroAcoustics input file [used only when C
 "default"              SpdSound    - Speed of sound (m/s)
 "default"              Patm        - Atmospheric pressure (Pa) [used only when CavitCheck=True]
 "default"              Pvap        - Vapour pressure of fluid (Pa) [used only when CavitCheck=True]
-======  Blade-Element/Momentum Theory Options  ====================================================== [used only when WakeMod=1]
+======  Blade-Element/Momentum Theory Options  ====================================================== [unused when Wake_Mod=0 or 3, except for BEM_Mod]
 1                      BEM_Mod     - BEM model {1=legacy NoSweepPitchTwist, 2=polar} (switch) [used for all Wake_Mod to determine output coordinate system]
 --- Skew correction
-1                      Skew_Mod     - Type of skewed-wake correction model (switch) {1=uncoupled, 2=Pitt/Peters, 3=coupled} [unused when WakeMod=0 or 3]
+1                      Skew_Mod    - Skew model {0=No skew model, -1=Remove non-normal component for linearization, 1=skew model active}
 False                  SkewMomCorr - Turn the skew momentum correction on or off [used only when Skew_Mod=1]
 default                SkewRedistr_Mod - Type of skewed-wake correction model (switch) {0=no redistribution, 1=Glauert/Pitt/Peters, default=1} [used only when Skew_Mod=1]
 "default"              SkewRedistrFactor - Constant used in Pitt/Peters skewed wake model {or "default" is 15/32*pi} (-) [used only when Skew_Mod=1 and SkewRedistr_Mod=1]
@@ -48,6 +48,7 @@ default                SectAvgPsiFwd - Forward azimuth relative to blade where t
 True                   AoA34       - Sample the angle of attack (AoA) at the 3/4 chord or the AC point {default=True} [always used]
 4                      UA_Mod      - Unsteady Aero Model Switch (switch) {1=Baseline model (Original), 2=Gonzalez's variant (changes in Cn,Cc,Cm), 3=Minnema/Pierce variant (changes in Cc and Cm)} [used only when AFAeroMod=2]
 True                   FLookup     - Flag to indicate whether a lookup for f' will be calculated (TRUE) or whether best-fit exponential equations will be used (FALSE); if FALSE S1-S4 must be provided in airfoil input files (flag) [used only when AFAeroMod=2]
+3                 IntegrationMethod  - Switch to indicate which integration method UA uses (1=RK4, 2=AB4, 3=ABM4, 4=BDF2)
 0.1                    UAStartRad  - Starting radius for dynamic stall (fraction of rotor radius) [used only when AFAeroMod=2]
 1.0                    UAEndRad    - Ending radius for dynamic stall (fraction of rotor radius) [used only when AFAeroMod=2]
 ======  Airfoil Information =========================================================================
