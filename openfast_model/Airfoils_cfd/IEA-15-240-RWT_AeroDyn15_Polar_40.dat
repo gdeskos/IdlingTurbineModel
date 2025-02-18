@@ -45,7 +45,7 @@ Default                  St_sh       ! Strouhal's shedding frequency constant.  
 0.000000                 k3          ! Constant in the \hat(x)_cp curve best-fit.  [ignored if UA_Mod<>1]
 0.000000                 k1_hat      ! Constant in the expression of Cc due to leading edge vortex effects.  [ignored if UA_Mod<>1]
 Default                  x_cp_bar    ! Constant in the expression of \hat(x)_cp^v. [ignored if UA_Mod<>1, default = 0.2]
-Default                  UACutout    ! Angle of attack above which unsteady aerodynamics are disabled (deg). [Specifying the string "Default" sets UACutout to 45 degrees]
+360                  UACutout    ! Angle of attack above which unsteady aerodynamics are disabled (deg). [Specifying the string "Default" sets UACutout to 45 degrees]
 Default                  filtCutOff  ! Reduced frequency cut-off for low-pass filtering the AoA input to UA, as well as the 1st and 2nd derivatives (-) [default = 0.5]
 !........................................
 ! Table of aerodynamics coefficients
