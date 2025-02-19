@@ -32,19 +32,25 @@ args = parser.parse_args()
 
 ### Simulation settings
 TMax = 1120.  # Length of wind grids and OpenFAST simulations, suggested 720 s
-runDir = os.path.join(f'/scratch/{os.environ['USER']}/idlingRotor/','CAT2')
-WindInputFolder = '../turb_sim/TurbSimGenFiles/CAT2'            # will read in all .bts files in this folder
+runDir = os.path.join(f'/scratch/{os.environ['USER']}/STORM_25_updated/','IEC')
+# WindInputFolder = '../turb_sim/TurbSimGenFiles/CAT5'            # will read in all .bts files in this folder
+WindInputFolder = '/projects/storm/IdlingRotor/models/inflow/higherResolution/withRamp'            # will read in all .bts files in this folder
 workingFilePrefix = 'stormDlcs'                                 # Prefix for the working files  
 
+# UAmodel = 0 # 0=Quasi-steady (no UA), 2=B-L Gonzalez, 3=B-L Minnema/Pierce, 4=B-L HGM 4-states, 5=B-L HGM+vortex 5 states, 6=Oye, 7=Boeing-Vertol
 UAmodel = 4 # 0=Quasi-steady (no UA), 2=B-L Gonzalez, 3=B-L Minnema/Pierce, 4=B-L HGM 4-states, 5=B-L HGM+vortex 5 states, 6=Oye, 7=Boeing-Vertol
 
-DLC = '6.1' # or '6.2'
+
+DLC = '6.2' # or '6.2'
 
 fastEXE = '../../i_decFiles/openfast/build/glue-codes/openfast/openfast'  # Path to OpenFAST executable 
 
 # Adv user settings
 AeroDynFile = 'IEA-15-240-RWT-LandBased_AeroDyn15_cfd.dat' # for CFD polars, 'IEA-15-240-RWT-LandBased_AeroDyn15.dat' for stock polars
 
+# Convert WindInputFolder to absolute path if it's relative
+if not os.path.isabs(WindInputFolder):
+    WindInputFolder = os.path.abspath(os.path.join(os.path.dirname(__file__), WindInputFolder))
 
 
 ### Main function
@@ -149,7 +155,8 @@ def main():
     if n_cores == 1:
         summary_stats, extreme_table, DELs, Damage, ct = fastBatch.run_serial()
     else:
-        summary_stats, extreme_table, DELs, Damage, ct = fastBatch.run_multi(n_cores)
+        #summary_stats, extreme_table, DELs, Damage, ct = fastBatch.run_multi(n_cores)
+        fastBatch.run_multi(n_cores)
 
 
 def copyNinjaRelatedFiles():
