@@ -357,7 +357,7 @@ class runFAST_pywrapper_batch(object):
             cores = mp.cpu_count()
         pool = mp.Pool(cores)
 
-        self.init_crunch()
+        # self.init_crunch()
 
         case_data_all = self.create_case_data()
 
@@ -377,9 +377,9 @@ class runFAST_pywrapper_batch(object):
             dam[_name] = _dam
             ct.append(_ct)
             
-        summary_stats, extreme_table, DELs, Damage = self.la.post_process(ss, et, dl, dam)
+#        summary_stats, extreme_table, DELs, Damage = self.la.post_process(ss, et, dl, dam)
 
-        return summary_stats, extreme_table, DELs, Damage, ct
+        return #summary_stats, extreme_table, DELs, Damage, ct
 
     def run_mpi(self, mpi_comm_map_down):
 

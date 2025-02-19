@@ -1,0 +1,9 @@
+
+Predictions were generated on 23-Mar-2024 at 13:31:43 using OpenFAST, compiled on Jan 17 2024 at 15:49:59 as a 64-bit application using double precision at commit v2.1.0-4436-gd5c23681
+ linked with  NWTC Subroutine Library; ElastoDyn; BeamDyn; InflowWind; AeroDyn; ServoDyn
+
+Description from the FAST input file: Generated with AeroElasticSE FAST driver
+
+B1RootMxyr	B2RootMxyr	B3RootMxyr	YawBrMxyp	TwrBsMxyt
+(N-m)       (N-m)      	(N-m)      	(kN-m)      	(kN-m)
+0.0       	0.0        	0.0        	0.0        	0.0
